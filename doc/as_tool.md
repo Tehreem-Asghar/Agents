@@ -18,11 +18,15 @@ aur tumhara original Agent run hoga.
 
 # **3. Difference from Handoff**
 
-         **Handoff**                                                            	**as_tool**
-Conversation ka control dusre agent ko de deta hai   | 	Sirf ek helper call hota hai, control wapas original agent 
-                                                     |       ke paas jata hai
-Sub-agent ko poora conversation history milta hai    |	Sirf specific input milta hai
-Sub-agent poora conversation le leta hai	         |   Ye sirf ek call hota hai
+**Handoff**                                                            
+- Conversation ka control dusre agent ko de deta hai  
+- Sub-agent ko poora conversation history milta hai    
+- Sub-agent poora conversation le leta hai	         
+
+**as_tool**
+- Sirf ek helper call hota hai, control wapas original agent ke paas jata hai
+- Sirf specific input milta hai
+- Ye sirf ek call hota hai
 
 # **4. Parameters**
 ```
