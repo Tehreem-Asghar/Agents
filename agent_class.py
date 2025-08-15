@@ -56,10 +56,7 @@ async def dynamic_instructions(ctx, agent):
 agent1 = Agent(
     name="JokeBot",
     instructions="You are a joke bot",
-    
     # instructions=dynamic_instructions,
-
-
     model=model
 )
 agent2 = Agent(
@@ -92,13 +89,16 @@ def Today():
     """ Get the current day"""
     return "Today is Monday"
         
+xy = agent1.as_tool(tool_name = "joke_tool", tool_description="A tool to tell jokes about Python")        
 
 agent3 = Agent(
     name="delegatetaskBot",
     instructions="You are a task delegation bot that can delegate tasks to other agents based on their expertise.",
     model=model,
-    handoffs = [handoff(agent1 , tool_description_override="Handles joke-related queries") , handoff(agent2 , tool_description_override="Handles speech-related queries") , handoff(recipe_bot , tool_description_override="Handles recipe-related queries") , handoff(news_bot , tool_description_override="Handles news-related queries") ] ,
-    tools=[wheather , Today],
+    handoffs = [
+                #  handoff(agent1 , tool_description_override="Handles joke-related queries") ,
+                 handoff(agent2 , tool_description_override="Handles speech-related queries") , handoff(recipe_bot , tool_description_override="Handles recipe-related queries") , handoff(news_bot , tool_description_override="Handles news-related queries") ] ,
+    tools=[wheather , Today , xy],
     # tool_use_behavior="run_llm_again"  # User input → LLM decides tool → Tool output → LLM processes tool output → Final answer
     # tool_use_behavior="stop_on_first_tool" #  User input → LLM decides tool → Tool output → Final answer (LLM ko wapas nahi bhejte)
     tool_use_behavior=StopAtTools(stop_at_tool_name="Today"), # User Query → ToolCallItem → ToolCallOutputItem → MessageOutputItem → User
@@ -114,8 +114,9 @@ async def main():
     # user_input = input("Enter ingredient (e.g., 'chocolate' or 'salad'): ")
 
     # result = await Runner.run(agent3, user_input , run_config=config , context=RecipeInput(input=user_input))
-    result = await Runner.run(copy, "tell me a joke about python " , run_config=config )
+    # result = await Runner.run(copy, "tell me a joke about python " , run_config=config )
 
+    result = await Runner.run(agent3, "tell me a joke about python " , run_config=config )
 
     # print("\n--- RecipeBot Response ---")
     print(result.final_output)
