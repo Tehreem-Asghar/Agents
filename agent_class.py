@@ -121,7 +121,7 @@ async def main():
     # result = await Runner.run(agent3, user_input , run_config=config , context=RecipeInput(input=user_input))
     # result = await Runner.run(copy, "tell me a joke about python " , run_config=config )
 
-    result = await Runner.run(agent3, input_items , run_config=config )
+    result = await Runner.run(agent3, " how are you " , run_config=config )
 
 
 # Example input as a list of items

@@ -96,3 +96,1299 @@ class RunResultBase(abc.ABC):
 
 
 Yeh class abstract hai, yani directly use nahi hoti, balkay isko inherit karke RunResult ya RunResultStreaming jaisi concrete classes banai jati hain jo actual result return karti hain. Is tarah aapko agent run ka detailed aur structured result milta hai, jisse aap analysis, debugging, ya further processing kar sakte hain.
+
+# Agar koi handoff toolcall nhi hoga direct agent answer kara ka to ya workflow hoga 
+
+
+```
+RunResult(
+    input=' how are you ',
+    new_items=[
+        MessageOutputItem(
+            agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001F8A9EE1800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},   
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001F8A9EE1C60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001F8A9EE2160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001F8A9EE1F80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001F8A9EE1BC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001F8A9EE23E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x000001F8A9E74860>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            raw_item=ResponseOutputMessage(
+                id='__fake_id__',
+                content=[
+                    ResponseOutputText(
+                        annotations=[],
+                        text='I am doing well, thank you for asking. How can I help you today?\n',
+                        type='output_text',
+                        logprobs=None
+                    )
+                ],
+                role='assistant',
+                status='completed',
+                type='message'
+            ),
+            type='message_output_item'
+        )
+    ],
+    raw_responses=[
+        ModelResponse(
+            output=[
+                ResponseOutputMessage(
+                    id='__fake_id__',
+                    content=[
+                        ResponseOutputText(
+                            annotations=[],
+                            text='I am doing well, thank you for asking. How can I help you today?\n',
+                            type='output_text',
+                            logprobs=None
+                        )
+                    ],
+                    role='assistant',
+                    status='completed',
+                    type='message'
+                )
+            ],
+            usage=Usage(
+                requests=1,
+                input_tokens=81,
+                input_tokens_details=InputTokensDetails(cached_tokens=0),
+                output_tokens=18,
+                output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+                total_tokens=99
+            ),
+            response_id=None
+        )
+    ],
+    final_output='I am doing well, thank you for asking. How can I help you today?\n',
+    input_guardrail_results=[],
+    output_guardrail_results=[],
+    context_wrapper=RunContextWrapper(
+        context=None,
+        usage=Usage(
+            requests=1,
+            input_tokens=81,
+            input_tokens_details=InputTokensDetails(cached_tokens=0),
+            output_tokens=18,
+            output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+            total_tokens=99
+        )
+    ),
+    _last_agent=Agent(
+        name='delegatetaskBot',
+        handoff_description=None,
+        tools=[
+            FunctionTool(
+                name='wheather',
+                description='Get the current weather.',
+                params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001F8A9EE1800>,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            FunctionTool(
+                name='Today',
+                description='Get the current day',
+                params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001F8A9EE1C60>,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            FunctionTool(
+                name='joke_tool',
+                description='A tool to tell jokes about Python',
+                params_json_schema={
+                    'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                    'required': ['input'],
+                    'title': 'joke_tool_args',
+                    'type': 'object',
+                    'additionalProperties': False
+                },
+                on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001F8A9EE2160>,
+                strict_json_schema=True,
+                is_enabled=True
+            )
+        ],
+        mcp_servers=[],
+        mcp_config={},
+        instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+        prompt=None,
+        handoffs=[
+            Handoff(
+                tool_name='transfer_to_speechbot',
+                tool_description='Handles speech-related queries',
+                input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001F8A9EE1F80>,
+                agent_name='speechBot',
+                input_filter=None,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            Handoff(
+                tool_name='transfer_to_recipebot',
+                tool_description='Handles recipe-related queries',
+                input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001F8A9EE1BC0>,
+                agent_name='RecipeBot',
+                input_filter=None,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            Handoff(
+                tool_name='transfer_to_newsbot',
+                tool_description='Handles news-related queries',
+                input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001F8A9EE23E0>,
+                agent_name='NewsBot',
+                input_filter=None,
+                strict_json_schema=True,
+                is_enabled=True
+            )
+        ],
+        model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x000001F8A9E74860>,
+        model_settings=ModelSettings(
+            temperature=None,
+            top_p=None,
+            frequency_penalty=None,
+            presence_penalty=None,
+            tool_choice=None,
+            parallel_tool_calls=None,
+            truncation=None,
+            max_tokens=None,
+            reasoning=None,
+            metadata=None,
+            store=None,
+            include_usage=None,
+            response_include=None,
+            extra_query=None,
+            extra_body=None,
+            extra_headers=None,
+            extra_args=None
+        ),
+        input_guardrails=[],
+        output_guardrails=[],
+        output_type=None,
+        hooks=None,
+        tool_use_behavior={'stop_at_tool_name': 'Today'},
+        reset_tool_choice=True
+    )
+)
+
+```
+
+
+
+
+
+
+## Agar handoff hoga to ya workflow hoga 
+
+```
+RunResult(
+    input='write a speech on the importance of AI in education  delegate this task to the speechBot agent ',
+    new_items=[
+        HandoffCallItem(
+            agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},      
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106D800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106DC60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106E160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106DF80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106DBC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106E3E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x0000020F61014CE0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            raw_item=ResponseFunctionToolCall(arguments='{}', call_id='', name='transfer_to_speechbot', type='function_call', id='__fake_id__', status=None),  
+            type='handoff_call_item'
+        ),
+        HandoffOutputItem(
+            agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},      
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106D800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106DC60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106E160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106DF80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106DBC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106E3E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x0000020F61014CE0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            raw_item={'call_id': '', 'output': '{"assistant": "speechBot"}', 'type': 'function_call_output'},
+            source_agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},      
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106D800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106DC60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x0000020F6106E160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106DF80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106DBC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x0000020F6106E3E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x0000020F61014CE0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            target_agent=Agent(
+                name='speechBot',
+                handoff_description=None,
+                tools=[],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a speech bot that can generate speeches on various topics.',
+                prompt=None,
+                handoffs=[],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x0000020F61014CE0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior='run_llm_again',
+                reset_tool_choice=True
+            ),
+            type='handoff_output_item'
+        ),
+        MessageOutputItem(
+            agent=Agent(
+                name='speechBot',
+                handoff_description=None,
+                tools=[],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a speech bot that can generate speeches on various topics.',
+                prompt=None,
+                handoffs=[],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x0000020F61014CE0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior='run_llm_again',
+                reset_tool_choice=True
+            ),
+            raw_item=ResponseOutputMessage(
+                id='__fake_id__',
+                content=[
+                    ResponseOutputText(
+                        annotations=[],
+                        text='Okay, transferring this task to speechBot. Please wait while speechBot prepares your speech on the importance of AI in 
+education.\n',
+                        type='output_text',
+                        logprobs=None
+                    )
+                ],
+                role='assistant',
+                status='completed',
+                type='message'
+            ),
+            type='message_output_item'
+        )
+    ],
+    raw_responses=[
+        ModelResponse(
+            output=[ResponseFunctionToolCall(arguments='{}', call_id='', name='transfer_to_speechbot', type='function_call', id='__fake_id__', status=None)],  
+            usage=Usage(
+                requests=1,
+                input_tokens=97,
+                input_tokens_details=InputTokensDetails(cached_tokens=0),
+                output_tokens=6,
+                output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+                total_tokens=103
+            ),
+            response_id=None
+        ),
+        ModelResponse(
+            output=[
+                ResponseOutputMessage(
+                    id='__fake_id__',
+                    content=[
+                        ResponseOutputText(
+                            annotations=[],
+                            text='Okay, transferring this task to speechBot. Please wait while speechBot prepares your speech on the importance of AI in       
+education.\n',
+                            type='output_text',
+                            logprobs=None
+                        )
+                    ],
+                    role='assistant',
+                    status='completed',
+                    type='message'
+                )
+            ],
+            usage=Usage(
+                requests=1,
+                input_tokens=53,
+                input_tokens_details=InputTokensDetails(cached_tokens=0),
+                output_tokens=26,
+                output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+                total_tokens=79
+            ),
+            response_id=None
+        )
+    ],
+    final_output='Okay, transferring this task to speechBot. Please wait while speechBot prepares your speech on the importance of AI in education.\n',        
+    input_guardrail_results=[],
+    output_guardrail_results=[],
+    context_wrapper=RunContextWrapper(
+        context=None,
+        usage=Usage(
+            requests=2,
+            input_tokens=150,
+            input_tokens_details=InputTokensDetails(cached_tokens=0),
+            output_tokens=32,
+            output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+            total_tokens=182
+        )
+    ),
+    _last_agent=Agent(
+        name='speechBot',
+        handoff_description=None,
+        tools=[],
+        mcp_servers=[],
+        mcp_config={},
+        instructions='You are a speech bot that can generate speeches on various topics.',
+        prompt=None,
+        handoffs=[],
+        model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x0000020F61014CE0>,
+        model_settings=ModelSettings(
+            temperature=None,
+            top_p=None,
+            frequency_penalty=None,
+            presence_penalty=None,
+            tool_choice=None,
+            parallel_tool_calls=None,
+            truncation=None,
+            max_tokens=None,
+            reasoning=None,
+            metadata=None,
+            store=None,
+            include_usage=None,
+            response_include=None,
+            extra_query=None,
+            extra_body=None,
+            extra_headers=None,
+            extra_args=None
+        ),
+            extra_headers=None,
+            extra_headers=None,
+            extra_headers=None,
+            extra_headers=None,
+            extra_args=None
+            extra_headers=None,
+            extra_args=None
+            extra_headers=None,
+            extra_headers=None,
+            extra_headers=None,
+            extra_headers=None,
+            extra_args=None
+        ),
+            extra_headers=None,
+            extra_args=None
+            extra_headers=None,
+            extra_args=None
+            extra_headers=None,
+            extra_args=None
+        ),
+        input_guardrails=[],
+        output_guardrails=[],
+        output_type=None,
+        hooks=None,
+        tool_use_behavior='run_llm_again',
+        reset_tool_choice=True
+    )
+)
+
+```
+
+
+## Agar toolcall hoga to ya flow hoga 
+
+
+```
+RunResult(
+    input='tell me a joke about python? ',
+    new_items=[
+        ToolCallItem(
+            agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93D800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},   
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93DC60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93E160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DF80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DBC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93E3E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x000001A85B8E62D0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            raw_item=ResponseFunctionToolCall(
+                arguments='{"input":"Tell me a joke about python"}',
+                call_id='',
+                name='joke_tool',
+                type='function_call',
+                id='__fake_id__',
+                status=None
+            ),
+            type='tool_call_item'
+        ),
+        ToolCallOutputItem(
+            agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},      
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93D800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93DC60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93E160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DF80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DBC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93E3E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x000001A85B8E62D0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            raw_item={
+                'call_id': '',
+                'output': 'Why do Python programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛\n',
+                'type': 'function_call_output'
+            },
+            output='Why do Python programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛\n',
+            type='tool_call_output_item'
+        ),
+        MessageOutputItem(
+            agent=Agent(
+                name='delegatetaskBot',
+                handoff_description=None,
+                tools=[
+                    FunctionTool(
+                        name='wheather',
+                        description='Get the current weather.',
+                        params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},      
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93D800>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='Today',
+                        description='Get the current day',
+                        params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93DC60>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    FunctionTool(
+                        name='joke_tool',
+                        description='A tool to tell jokes about Python',
+                        params_json_schema={
+                            'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                            'required': ['input'],
+                            'title': 'joke_tool_args',
+                            'type': 'object',
+                            'additionalProperties': False
+                        },
+                        on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93E160>,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                mcp_servers=[],
+                mcp_config={},
+                instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+                prompt=None,
+                handoffs=[
+                    Handoff(
+                        tool_name='transfer_to_speechbot',
+                        tool_description='Handles speech-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DF80>,
+                        agent_name='speechBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_recipebot',
+                        tool_description='Handles recipe-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DBC0>,
+                        agent_name='RecipeBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    ),
+                    Handoff(
+                        tool_name='transfer_to_newsbot',
+                        tool_description='Handles news-related queries',
+                        input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                        on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93E3E0>,
+                        agent_name='NewsBot',
+                        input_filter=None,
+                        strict_json_schema=True,
+                        is_enabled=True
+                    )
+                ],
+                model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x000001A85B8E62D0>,
+                model_settings=ModelSettings(
+                    temperature=None,
+                    top_p=None,
+                    frequency_penalty=None,
+                    presence_penalty=None,
+                    tool_choice=None,
+                    parallel_tool_calls=None,
+                    truncation=None,
+                    max_tokens=None,
+                    reasoning=None,
+                    metadata=None,
+                    store=None,
+                    include_usage=None,
+                    response_include=None,
+                    extra_query=None,
+                    extra_body=None,
+                    extra_headers=None,
+                    extra_args=None
+                ),
+                input_guardrails=[],
+                output_guardrails=[],
+                output_type=None,
+                hooks=None,
+                tool_use_behavior={'stop_at_tool_name': 'Today'},
+                reset_tool_choice=True
+            ),
+            raw_item=ResponseOutputMessage(
+                id='__fake_id__',
+                content=[
+                    ResponseOutputText(
+                        annotations=[],
+                        text='Why do Python programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛\n',
+                        type='output_text',
+                        logprobs=None
+                    )
+                ],
+                role='assistant',
+                status='completed',
+                type='message'
+            ),
+            type='message_output_item'
+        )
+    ],
+    raw_responses=[
+        ModelResponse(
+            output=[
+                ResponseFunctionToolCall(
+                    arguments='{"input":"Tell me a joke about python"}',
+                    call_id='',
+                    name='joke_tool',
+                    type='function_call',
+                    id='__fake_id__',
+                    status=None
+                )
+            ],
+            usage=Usage(
+                requests=1,
+                input_tokens=85,
+                input_tokens_details=InputTokensDetails(cached_tokens=0),
+                output_tokens=10,
+                output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+                total_tokens=95
+            ),
+            response_id=None
+        ),
+        ModelResponse(
+            output=[
+                ResponseOutputMessage(
+                    id='__fake_id__',
+                    content=[
+                        ResponseOutputText(
+                            annotations=[],
+                            text='Why do Python programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛\n',
+                            type='output_text',
+                            logprobs=None
+                        )
+                    ],
+                    role='assistant',
+                    status='completed',
+                    type='message'
+                )
+            ],
+            usage=Usage(
+                requests=1,
+                input_tokens=116,
+                input_tokens_details=InputTokensDetails(cached_tokens=0),
+                output_tokens=17,
+                output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+                total_tokens=133
+            ),
+            response_id=None
+        )
+    ],
+    final_output='Why do Python programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛\n',
+    input_guardrail_results=[],
+    output_guardrail_results=[],
+    context_wrapper=RunContextWrapper(
+        context=None,
+        usage=Usage(
+            requests=2,
+            input_tokens=201,
+            input_tokens_details=InputTokensDetails(cached_tokens=0),
+            output_tokens=27,
+            output_tokens_details=OutputTokensDetails(reasoning_tokens=0),
+            total_tokens=228
+        )
+    ),
+    _last_agent=Agent(
+        name='delegatetaskBot',
+        handoff_description=None,
+        tools=[
+            FunctionTool(
+                name='wheather',
+                description='Get the current weather.',
+                params_json_schema={'properties': {}, 'title': 'wheather_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93D800>,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            FunctionTool(
+                name='Today',
+                description='Get the current day',
+                params_json_schema={'properties': {}, 'title': 'Today_args', 'type': 'object', 'additionalProperties': False, 'required': []},
+                on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93DC60>,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            FunctionTool(
+                name='joke_tool',
+                description='A tool to tell jokes about Python',
+                params_json_schema={
+                    'properties': {'input': {'title': 'Input', 'type': 'string'}},
+                    'required': ['input'],
+                    'title': 'joke_tool_args',
+                    'type': 'object',
+                    'additionalProperties': False
+                },
+                on_invoke_tool=<function function_tool.<locals>._create_function_tool.<locals>._on_invoke_tool at 0x000001A85B93E160>,
+                strict_json_schema=True,
+                is_enabled=True
+            )
+        ],
+        mcp_servers=[],
+        mcp_config={},
+        instructions='You are a task delegation bot that can delegate tasks to other agents based on their expertise.',
+        prompt=None,
+        handoffs=[
+            Handoff(
+                tool_name='transfer_to_speechbot',
+                tool_description='Handles speech-related queries',
+                input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DF80>,
+                agent_name='speechBot',
+                input_filter=None,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            Handoff(
+                tool_name='transfer_to_recipebot',
+                tool_description='Handles recipe-related queries',
+                input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93DBC0>,
+                agent_name='RecipeBot',
+                input_filter=None,
+                strict_json_schema=True,
+                is_enabled=True
+            ),
+            Handoff(
+                tool_name='transfer_to_newsbot',
+                tool_description='Handles news-related queries',
+                input_json_schema={'additionalProperties': False, 'type': 'object', 'properties': {}, 'required': []},
+                on_invoke_handoff=<function handoff.<locals>._invoke_handoff at 0x000001A85B93E3E0>,
+                agent_name='NewsBot',
+                input_filter=None,
+                strict_json_schema=True,
+                is_enabled=True
+            )
+        ],
+        model=<agents.models.openai_chatcompletions.OpenAIChatCompletionsModel object at 0x000001A85B8E62D0>,
+        model_settings=ModelSettings(
+            temperature=None,
+            top_p=None,
+            frequency_penalty=None,
+            presence_penalty=None,
+            tool_choice=None,
+            parallel_tool_calls=None,
+            truncation=None,
+            max_tokens=None,
+            reasoning=None,
+            metadata=None,
+            store=None,
+            include_usage=None,
+            response_include=None,
+            extra_query=None,
+            extra_body=None,
+            extra_headers=None,
+            extra_args=None
+        ),
+        input_guardrails=[],
+        output_guardrails=[],
+        output_type=None,
+        hooks=None,
+        tool_use_behavior={'stop_at_tool_name': 'Today'},
+        reset_tool_choice=True
+    )
+)
+
+```
+
+
