@@ -1,4 +1,4 @@
-from agents import Agent , Runner , AsyncOpenAI , OpenAIChatCompletionsModel ,handoff, RunContextWrapper  , TContext , function_tool  # type: ignore
+from agents import Agent , Runner , AsyncOpenAI , OpenAIChatCompletionsModel ,handoff, RunContextWrapper  , TContext , function_tool , TResponseInputItem  # type: ignore
 from agents.run import RunConfig  # type: ignore
 from dotenv import load_dotenv # type: ignore
 import os
@@ -105,6 +105,11 @@ agent3 = Agent(
     reset_tool_choice = True # Reset tool choice after each run
 
 )
+# Suppose ek conversation input hai
+input_items: list[TResponseInputItem] = [
+    {"role": "system","content": "You are a teacher your job is to help users with queries strictly related to coding concepts and programming languages"},
+    {"role": "user", "content": "tell me a joke about python?"},
+]
 
 copy = agent3.clone(name="teacher" , instructions="You are a teacher your job is to help users with queries strictly related to coding concepts and programming languages")
 
@@ -116,7 +121,24 @@ async def main():
     # result = await Runner.run(agent3, user_input , run_config=config , context=RecipeInput(input=user_input))
     # result = await Runner.run(copy, "tell me a joke about python " , run_config=config )
 
-    result = await Runner.run(agent3, "tell me a joke about python " , run_config=config )
+    result = await Runner.run(agent3, input_items , run_config=config )
+
+
+# Example input as a list of items
+
+# from src.agents.items import TResponseInputItem
+#  input ma es trha ki list send ki ja sakti hai 
+# input_list = [
+#     TResponseInputItem(role="user", content="Hello!"),
+#     TResponseInputItem(role="system", content="System message here"),
+#     TResponseInputItem(role="tool", content="Tool output here"),
+# ]
+
+
+
+
+
+
 
     # print("\n--- RecipeBot Response ---")
     print(result.final_output)
