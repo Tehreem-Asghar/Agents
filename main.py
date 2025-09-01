@@ -11,6 +11,7 @@ from agents import (  # type: ignore
     TResponseInputItem,
     ModelSettings,
     function_tool,
+    enable_verbose_stdout_logging
 )
 from agents.run import RunConfig  # type: ignore
 from dotenv import load_dotenv
@@ -25,6 +26,10 @@ load_dotenv()
 key = os.getenv("api_key")
 if not key:
     raise ValueError("API key is not set in the environment variables.")
+
+print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.")
+enable_verbose_stdout_logging()
+print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.")
 
 
 Externl_client: AsyncOpenAI = AsyncOpenAI(

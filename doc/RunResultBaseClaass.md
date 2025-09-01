@@ -13,7 +13,7 @@ class RunResultBase(abc.ABC):
 
     Attributes:
         input: Jo input agent ko diya gaya tha (string ya list). Agar handoff input filter laga ho toh yeh mutate bhi ho sakta hai.
-        new_items: Workflow ke dauran generate hue naye items (messages, tool calls, outputs, etc.).
+        new_items: Agent run ke dauran jo naye items (messages, tool calls) generate hue.
         raw_responses: Model (LLM) ke raw responses jo agent run ke dauran mile.
         final_output: Last agent ka output.
         input_guardrail_results: Input par lagaye gaye guardrails (safety checks) ke results.
