@@ -6,9 +6,9 @@ from pydantic import BaseModel  # type: ignore
 import rich
 from agents.extensions import handoff_filters
 
-# print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-# enable_verbose_stdout_logging()
-# print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+enable_verbose_stdout_logging()
+print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 load_dotenv()
 openai = os.getenv("OPENAI_API_KEY")
 Api_key = os.getenv("api_key")
