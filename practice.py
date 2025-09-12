@@ -4,6 +4,7 @@ from dotenv import load_dotenv # type: ignore
 from agents import TResponseInputItem  # Add this import if TResponseInputItem is defined in agents.types
 import os
 import rich
+from openai.types.responses import ResponseTextDeltaEvent
 enable_verbose_stdout_logging()
 
 load_dotenv()
@@ -51,7 +52,7 @@ recipe_bot = Agent(
 
 
 agent = Agent(
-    name = "Assistent",
+    name = "AssistantBot",
     # instructions=instructions_func,
     instructions="You are a helpful assistant that helps users with their questions. if user ask about any recipy you can delegate task to recipe bot. if user ask about whether you can use whether tool",
     model=model,
@@ -59,6 +60,19 @@ agent = Agent(
     handoffs = [recipe_bot]
 
 )
+
+
+
+
+
+# agent = Agent(
+# name = "AssistantBot",
+#     tools= [whether],
+# )
+
+
+
+
 
 # es trha list da saktta hai ham input ma 
 input_list: list[TResponseInputItem] = [   
@@ -71,11 +85,19 @@ input_list: list[TResponseInputItem] = [
 ]
 
 async def main():
-    runner = await Runner.run(agent,"tell me tea recipe" , run_config=config)
+    # runner = await Runner.run(agent,"how many  tools you have" , run_config=config)
+    runner = Runner.run_streamed(agent,"what is wheather in karachi " , run_config=config)
+
     print("**********************************************************************************************************")
 
-    print(runner.final_output)
+    # print(runner.final_output)
     # rich.print(runner)
+
+    async for item in runner.stream_events():
+        # print(f"""[Event type] : {item.type} """)
+        # print(f"\n[Events] : {item}\n")
+        if item.type == "raw_response_event" and isinstance(item.data, ResponseTextDeltaEvent):
+            print(f"""\n[Event data] :  {item.data.delta}\n""")
 
 
     print("**********************************************************************************************************")
