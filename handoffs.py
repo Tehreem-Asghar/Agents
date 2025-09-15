@@ -1,4 +1,4 @@
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, handoff, enable_verbose_stdout_logging, function_tool, ModelSettings, trace, RunContextWrapper  # type: ignore
+from agents import Agent, HandoffInputData, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, handoff, enable_verbose_stdout_logging, function_tool, ModelSettings, trace, RunContextWrapper  # type: ignore
 from agents.run import RunConfig  # type: ignore
 from dotenv import load_dotenv  # type: ignore
 import os
@@ -6,9 +6,9 @@ from pydantic import BaseModel  # type: ignore
 import rich
 from agents.extensions import handoff_filters
 
-print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-enable_verbose_stdout_logging()
-print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+# print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+# enable_verbose_stdout_logging()
+# print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 load_dotenv()
 openai = os.getenv("OPENAI_API_KEY")
 Api_key = os.getenv("api_key")
@@ -44,7 +44,11 @@ def OneHandoff(ctx: RunContextWrapper, input: reason):
     print("Context : ", ctx.context)
 
 
-def Is_enabled(ctx: RunContextWrapper, agent: Agent):
+
+
+
+
+def Is_enabled(ctx: RunContextWrapper , agent: Agent):
     if ctx.context.is_student == True:
         return True
 
@@ -73,10 +77,12 @@ racipe = recipe_agent.as_tool(
 teacher = handoff(
     teacher_agent,
     tool_name_override="teacher_agent",
-    # tool_description_override="A handofftool to answer technical questions ",
+    tool_description_override="A handofftool to answer technical questions ",
     on_handoff=OneHandoff,
     input_type=reason,
     input_filter=handoff_filters.remove_all_tools,
+    
+
     is_enabled=Is_enabled,
 )
 
@@ -99,26 +105,23 @@ with trace(workflow_name="handoff_group_demo"):
 
     runner = Runner.run_sync(
         agent,
-        "tel me racipe of tea " "tell me what is capital of pakistan  ?  ",
+        "tell me racipe of tea and orang juice "
+          "tell me what is capital of pakistan  ?  ",
         run_config=config,
         context=User(name="Tehreem", age=20, city="New Karachi", is_student=True),
     )
 
-    print(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",
-        teacher.input_filter,
-        "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-    )
+
     print(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",
         runner.final_output,
         "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
     )
-    print(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",
-        agent.handoffs,
-        "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-    )
+    # print(
+    #     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",
+    #     agent.handoffs,
+    #     "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
+    # )
 
     # rich.print(runner.to_input_list())
     # print("Last Agent: ->>>>>>>>>", runner.last_agent)
