@@ -4,7 +4,7 @@ from dotenv import load_dotenv  # type: ignore
 import os
 from pydantic import BaseModel  # type: ignore
 import rich
-from agents.extensions import handoff_filters
+# from agents.extensions import handoff_filters
 
 # print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 # enable_verbose_stdout_logging()
@@ -80,7 +80,7 @@ teacher = handoff(
     tool_description_override="A handofftool to answer technical questions ",
     on_handoff=OneHandoff,
     input_type=reason,
-    input_filter=handoff_filters.remove_all_tools,
+    # input_filter=handoff_filters.remove_all_tools,
     
 
     is_enabled=Is_enabled,
