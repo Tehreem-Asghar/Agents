@@ -80,10 +80,10 @@ def enable(ctx: RunContextWrapper, Agent: Agent) -> bool:
     strict_mode=True,
     description_override="get the whether of a city",
     failure_error_function=error_handler,
-    is_enabled=enable,
+    # is_enabled=enable,
     docstring_style="google",
     use_docstring_info=True,
-    # is_enabled=True,
+    is_enabled=True, 
 )
 async def whether(ctx: RunContextWrapper, city: str) -> str:
     """Returns the weather for a given city."""
@@ -114,7 +114,7 @@ agent = Agent(
 async def main():
     runner = await Runner.run(
         agent,
-        "what is wheather in New_Karachi",
+        "tell me wheather of karachi ? ",
         run_config=config,
         context=address(city="Karachi"),
     )
