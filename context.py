@@ -2,7 +2,7 @@ from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, funct
 from agents.run import RunConfig  # type: ignore
 from dotenv import load_dotenv  # type: ignore
 import os
-from pydantic import BaseModel
+from pydantic import BaseModel # type: ignore
 # enable_verbose_stdout_logging()
 
 load_dotenv()

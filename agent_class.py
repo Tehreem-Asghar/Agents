@@ -6,9 +6,9 @@ import asyncio
 from pydantic import BaseModel  # type: ignore
 from dataclasses import dataclass
 import rich 
-from agents import Prompt  # Add this import for Prompt
-from agents.agent import StopAtTools  # <-- yahi import hona chahiye
-from agents.run import TraceCtxManager
+from agents import Prompt  # type: ignore Add this import for Prompt
+from agents.agent import StopAtTools  # type: ignore <-- yahi import hona chahiye
+from agents.run import TraceCtxManager # type: ignore
 
 
 load_dotenv()

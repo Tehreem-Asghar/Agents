@@ -1,11 +1,19 @@
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, enable_verbose_stdout_logging, function_tool, ModelSettings, RunContextWrapper, FunctionTool, AgentHooks, input_guardrail, GuardrailFunctionOutput, InputGuardrailTripwireTriggered  # type: ignore
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, enable_verbose_stdout_logging, function_tool, ModelSettings, RunContextWrapper, FunctionTool  # type: ignore
 from agents.run import RunConfig  # type: ignore
 from dotenv import load_dotenv  # type: ignore
 import os
 import rich
 from pydantic import BaseModel  # type: ignore
 from typing import List, Any
-from agents.exceptions import AgentsException
+from agents.exceptions import (
+    AgentsException,
+    MaxTurnsExceeded,
+    ModelBehaviorError,
+    UserError,
+    InputGuardrailTripwireTriggered,
+    OutputGuardrailTripwireTriggered,
+)
+
 
 # enable_verbose_stdout_logging()
 
@@ -29,43 +37,8 @@ config = RunConfig(
     model=model,
     model_provider=External_client,
     tracing_disabled=False,
-    workflow_name="input_guardrail_workflow",
+    workflow_name="Exceptions_handling_workflow",
 )
-
-
-class input_guard(BaseModel):
-    is_flight_related: bool
-    reason: str
-
-
-user_input_guard = Agent(
-    name="Input Guardrail",
-    instructions=(
-        "You are an input guardrail. Your job is to carefully check the user's input before "
-        "it is passed to any other agent. You must block or flag input if it is irrelevant, "
-        "malicious, unsafe, or not related to flights. Allow only inputs that are clearly about "
-        "booking flights, changing seats, or asking flight-related questions."
-    ),
-    model=model,
-    output_type=input_guard,
-)
-
-
-@input_guardrail
-async def inputguardrail(
-    ctx: RunContextWrapper, agent: Agent, input: str
-) -> GuardrailFunctionOutput:
-    result = await Runner.run(
-        starting_agent=user_input_guard,
-        input=input,
-        context=ctx.context,
-        run_config=config,
-    )
-
-    return GuardrailFunctionOutput(
-        output_info=result.final_output,
-        tripwire_triggered=not result.final_output.is_flight_related,
-    )
 
 
 class FlightBook(BaseModel):
@@ -78,7 +51,7 @@ class FlightBook(BaseModel):
 
 
 @function_tool()
-def book_flight(flight: FlightBook):
+def book_flight(flight: FlightBook) -> str:
     """Book a flight"""
     passenger_names = ", ".join(flight.name)
     return f"Booked flight for {passenger_names} from {flight.from_location} to {flight.to_location} on {flight.date} in {flight.seat_class} class for {flight.num_passengers} passenger(s)."
@@ -110,7 +83,6 @@ agent = Agent(
     instructions="you  are orchestrator agent that can delegate tasks to other agents based on their expertise.",
     model=model,
     handoffs=[flight_agent],
-    input_guardrails=[inputguardrail],
 )
 
 
@@ -118,9 +90,10 @@ async def main():
     try:
         result = await Runner.run(
             agent,
-            "what is answer 2 + 2 = ?",
-            # "Book a flight from karachi to dubai on 2023-06-15 in business class for 2 passengers. and passenger name is Tehreem and ayesha",
+            # "what is answer 2 + 2 = ?",
+            "Book a flight from karachi to dubai on 2023-06-15 in business class for 2 passengers. and passenger name is Tehreem and ayesha",
             run_config=config,
+            # max_turns=1
         )
 
         print(
@@ -128,11 +101,19 @@ async def main():
             result.final_output,
             "\n===================================================\n",
         )
-
+    except ModelBehaviorError as e:
+        print("\n\n ModelBehaviorError raised ------->\n ", e, "\n\n")
+    except UserError as e:
+        print("\n\n UserError raised ------->\n ", e, "\n\n")
+    except MaxTurnsExceeded as e:
+        print("⚠️ Error: Agent allowed turns se zyada chal gaya", e)
     except InputGuardrailTripwireTriggered as e:
         print("Your Query is not related to flights.")
+    except OutputGuardrailTripwireTriggered as e:
+        print("agent output is not related to flights.", e)
     except AgentsException as e:
         print("\n\n Exception raised ------->\n ", e, "\n\n")
+
 
 if __name__ == "__main__":
     import asyncio
