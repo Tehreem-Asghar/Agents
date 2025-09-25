@@ -1,5 +1,5 @@
 [project]
-name = "agents"
+name = "session"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -7,9 +7,4 @@ requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
     "openai-agents>=0.2.4",
-    "pydantic>=2.11.7",
-    "rich>=14.1.0",
 ]
-
-[tool.uv.workspace]
-members = ["session"]

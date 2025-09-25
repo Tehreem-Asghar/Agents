@@ -35,18 +35,13 @@ config = RunConfig(
 
 
 class reason(BaseModel):
-    reason: str
+    result : str
 
 
 def OneHandoff(ctx: RunContextWrapper, input: reason):
     print("Handoff triger---->")
-    print("Input : ", input)
+    print("Input : ", input.result)
     print("Context : ", ctx.context)
-
-
-
-
-
 
 def Is_enabled(ctx: RunContextWrapper , agent: Agent):
     if ctx.context.is_student == True:
@@ -81,8 +76,6 @@ teacher = handoff(
     on_handoff=OneHandoff,
     input_type=reason,
     # input_filter=handoff_filters.remove_all_tools,
-    
-
     is_enabled=Is_enabled,
 )
 
@@ -105,8 +98,8 @@ with trace(workflow_name="handoff_group_demo"):
 
     runner = Runner.run_sync(
         agent,
-        "tell me racipe of tea and orang juice "
-          "tell me what is capital of pakistan  ?  ",
+        # "tell me racipe of tea and orang juice "
+        "tell me what is capital of pakistan  ? ",
         run_config=config,
         context=User(name="Tehreem", age=20, city="New Karachi", is_student=True),
     )

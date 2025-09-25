@@ -15,7 +15,7 @@ from agents.exceptions import (
 )
 
 
-# enable_verbose_stdout_logging()
+enable_verbose_stdout_logging()
 
 load_dotenv()
 openai = os.getenv("OPENAI_API_KEY")
@@ -89,9 +89,9 @@ agent = Agent(
 async def main():
     try:
         result = await Runner.run(
-            agent,
-            # "what is answer 2 + 2 = ?",
-            "Book a flight from karachi to dubai on 2023-06-15 in business class for 2 passengers. and passenger name is Tehreem and ayesha",
+            router_agent,
+            "what is answer 2 + 2 = ?",
+            # "Book a flight from karachi to dubai on 2023-06-15 in business class for 2 passengers. and passenger name is Tehreem and ayesha",
             run_config=config,
             # max_turns=1
         )
